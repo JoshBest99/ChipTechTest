@@ -5,4 +5,7 @@
     <dimen name="medium_spacing">12dp</dimen>
     <dimen name="large_spacing">24dp</dimen>
     <dimen name="loading_icon_size">150dp</dimen>
+    <dimen name="dog_item_height">50dp</dimen>
+    <dimen name="dog_item_image_size">35dp</dimen>
+    <dimen name="card_rounding">12dp</dimen>
 </resources>

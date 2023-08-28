@@ -19,13 +19,23 @@ class DogListViewModel(private val getDogsAsListUseCase: GetDogsAsListUseCase) :
     }
 
     fun getDogList() {
+        _dogListUiState.update {
+            it.copy(isRefreshing = true)
+        }
         viewModelScope.launch {
-            val dogList = getDogsAsListUseCase.invoke()
-            _dogListUiState.update {
-                it.copy(dogs = dogList)
+            try {
+                val dogList = getDogsAsListUseCase()
+                _dogListUiState.update {
+                    it.copy(dogs = dogList, isRefreshing = false, error = null)
+                }
+            } catch (e: Exception) {
+                _dogListUiState.update {
+                    it.copy(error = "Oops, Something went wrong!", isRefreshing = false)
+                }
             }
         }
     }
+
 }
 
 data class DogListUiState(
