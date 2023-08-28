@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -60,10 +61,15 @@ private fun DogList(dogsListUiState: DogListUiState, dogClicked: (String) -> Uni
             Column(
                 verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "${dogsListUiState.error}", style = MaterialTheme.typography.h4.copy(color = Color.Red), textAlign = TextAlign.Center)
-                if (!dogsListUiState.isRefreshing) {
-                    Button(onClick = { refreshDogs() }) {
-                        Text(text = "Try Again", style = MaterialTheme.typography.h5)
+                dogsListUiState.error?.let { error ->
+                    Text(text = error, style = MaterialTheme.typography.h4.copy(color = Color.Red), textAlign = TextAlign.Center)
+
+                    if (!dogsListUiState.isRefreshing) {
+                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.large_spacing)))
+
+                        Button(onClick = { refreshDogs() }) {
+                            Text(text = "Try Again", style = MaterialTheme.typography.h5)
+                        }
                     }
                 }
             }

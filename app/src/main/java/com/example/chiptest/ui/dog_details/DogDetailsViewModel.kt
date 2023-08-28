@@ -17,6 +17,7 @@ class DogDetailsViewModel(private val dog: String, private val apiRepository: Ap
     init {
         getDogImages()
     }
+
     fun getDogImages() {
         _dogDetailsUiState.update {
             it.copy(dog = dog, isRefreshing = true)
