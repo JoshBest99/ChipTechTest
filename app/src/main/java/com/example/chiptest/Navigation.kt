@@ -4,7 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.chiptest.ui.dog_details.DogDetails
+import com.example.chiptest.ui.dog_details.DogDetailsViewModel
 import com.example.chiptest.ui.dog_list.DogList
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun NavigationSetup(
@@ -19,7 +23,9 @@ fun NavigationSetup(
         }
         composable(Screen.DogDetails.route) {
             it.arguments?.getString("dogType")?.let { dogType ->
-                //DogDetails()
+                val viewModel: DogDetailsViewModel = koinViewModel(parameters = { parametersOf(dogType) })
+                viewModel.getDogImages()
+                DogDetails(viewModel)
             }
         }
     }

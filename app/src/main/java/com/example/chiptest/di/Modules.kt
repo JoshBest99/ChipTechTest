@@ -7,7 +7,7 @@ import org.koin.dsl.module
 
 val viewModelModules = module {
     viewModel { DogListViewModel(get()) }
-    viewModel { DogDetailsViewModel(get()) }
+    viewModel { DogDetailsViewModel(get(), get()) }
 }
 
 val repoModules = module {
