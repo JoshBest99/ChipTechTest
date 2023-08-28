@@ -24,7 +24,6 @@ fun NavigationSetup(
         composable(Screen.DogDetails.route) {
             it.arguments?.getString("dogType")?.let { dogType ->
                 val viewModel: DogDetailsViewModel = koinViewModel(parameters = { parametersOf(dogType) })
-                viewModel.getDogImages()
                 DogDetails(viewModel)
             }
         }

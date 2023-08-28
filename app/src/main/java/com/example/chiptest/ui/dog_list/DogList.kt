@@ -17,10 +17,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pets
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -31,8 +35,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextAlign
 import com.example.chiptest.R
 import com.example.chiptest.Screen
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -72,21 +74,31 @@ private fun DogList(dogsListUiState: DogListUiState, dogClicked: (String) -> Uni
         }
 
         AnimatedVisibility(visible = dogsListUiState.error == null && !dogsListUiState.isRefreshing) {
-            SwipeRefresh(modifier = Modifier.fillMaxSize(), state = rememberSwipeRefreshState(isRefreshing = dogsListUiState.isRefreshing), onRefresh = { refreshDogs() }) {
-                DogListColumn(dogs = dogsListUiState.dogs, dogClicked = dogClicked)
-            }
+            DogListColumn(dogs = dogsListUiState.dogs, isRefreshing = dogsListUiState.isRefreshing, dogClicked = dogClicked, refreshDogs = refreshDogs)
         }
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun DogListColumn(dogs: List<String>, dogClicked: (String) -> Unit) {
-    LazyColumn(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_spacing))) {
-        items(items = dogs) { dog ->
-            DogColumnItem(dog = dog) {
-                dogClicked(dog)
+private fun DogListColumn(dogs: List<String>, isRefreshing: Boolean, dogClicked: (String) -> Unit, refreshDogs: () -> Unit) {
+    val pullRefreshState = rememberPullRefreshState(refreshing = isRefreshing, onRefresh = { refreshDogs() })
+    Column(
+        verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .pullRefresh(pullRefreshState), verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_spacing))
+        ) {
+            items(items = dogs) { dog ->
+                DogColumnItem(dog = dog) {
+                    dogClicked(dog)
+                }
             }
         }
+
+        PullRefreshIndicator(refreshing = isRefreshing, state = pullRefreshState)
     }
 }
 

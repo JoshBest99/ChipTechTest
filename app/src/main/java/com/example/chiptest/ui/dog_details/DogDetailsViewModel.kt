@@ -13,6 +13,10 @@ class DogDetailsViewModel(private val dog: String, private val apiRepository: Ap
 
     private val _dogDetailsUiState = MutableStateFlow(DogDetailsUiState())
     val dogDetailsUiState: StateFlow<DogDetailsUiState> = _dogDetailsUiState.asStateFlow()
+
+    init {
+        getDogImages()
+    }
     fun getDogImages() {
         _dogDetailsUiState.update {
             it.copy(dog = dog, isRefreshing = true)
